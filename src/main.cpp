@@ -6,6 +6,10 @@ const int Clock_pin = 3;
 const int Data_pin = 2;
 
 const int Throw_dice_pin = 20;
+const int Choose_dice_pin_20 = 21;
+const int Choose_dice_pin_6 = 7;
+
+unsigned long last_button_press = 0;
 
 //array that holds all the binary values for the shiftregisters
 int digits [10][8]{
@@ -42,23 +46,33 @@ void setup() {
   pinMode(Clock_pin, OUTPUT);
   pinMode(Data_pin, OUTPUT);
   pinMode(Throw_dice_pin, INPUT_PULLDOWN);
-
+  pinMode(Choose_dice_pin_20, INPUT_PULLDOWN);
+  pinMode(Choose_dice_pin_6, INPUT_PULLDOWN);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
 
   if(digitalRead(Throw_dice_pin) == HIGH) {
-    int dice_throw = random(20);
-    digitalWrite(Latch_pin, LOW);
-    if (dice_throw < 10) {
-      WriteDigitToShiftRegister(dice_throw);
-      WriteDigitToShiftRegister(0);
-    } else {
-      WriteDigitToShiftRegister(dice_throw % 10);
-      WriteDigitToShiftRegister(dice_throw / 10);
+    //this is here so the function is not executed multiple times while only pushing the button once
+    if(last_button_press + 200 <= millis()){
+      int dice_throw;
+      if(digitalRead(Choose_dice_pin_20)){
+        dice_throw = random(1, 20);
+      } else if(digitalRead(Choose_dice_pin_6)){
+        dice_throw = random(1,6);
+      }
+      if (dice_throw < 10) {
+          WriteDigitToShiftRegister(dice_throw);
+          WriteDigitToShiftRegister(0);
+        } else {
+          WriteDigitToShiftRegister(dice_throw % 10);
+          WriteDigitToShiftRegister(dice_throw / 10);
+        }
+
+      last_button_press = millis();
     }
-    digitalWrite(Latch_pin, HIGH);
+    
   }
 }
 
@@ -68,9 +82,12 @@ void WriteDigitToShiftRegister(int Digit)
   //they need to be sent in to the shift register the "wrong way" so the last digit is being sent in first 
   for (int i = 7; i>=0; i--)
    {
+    digitalWrite(Latch_pin, LOW);
     digitalWrite(Clock_pin,LOW);
     if (digits[Digit][i]==1) {digitalWrite(Data_pin, LOW); /* Serial.print(0); */} 
     if (digits[Digit][i]==0) {digitalWrite(Data_pin, HIGH); /* Serial.print(1); */}
     digitalWrite(Clock_pin,HIGH);
+    digitalWrite(Latch_pin, HIGH);
+    //delay(30);
    }
 }
