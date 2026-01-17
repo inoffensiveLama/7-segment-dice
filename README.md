@@ -13,7 +13,7 @@ A digital dice using shift-register daisy-chaining and custom PCB design. Also i
 # Custom PCB
 
 The PCB was designed with KiCad. Only a few components are needed:<br>
-<img src="images/7-segment-dice.jpeg" alt="PCB Design KiCad" width="400">
+<img src="images/7-Segment-Dice-rendering.jpeg" alt="PCB Design KiCad" width="400">
 
 ## Bill of Materials (BOM)
 
