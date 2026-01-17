@@ -1,9 +1,30 @@
 # 7-segment-dice
 
-WORK IN PROGRESS.
+<img src="images/7-segment-dice.jpeg" alt="7-segment-display" width="400">
 
-Its a small dice, that uses 7 segment displays. You can choose how many faces your dice should have. It will randomly roll a value and output it for you.
+A digital dice using shift-register daisy-chaining and custom PCB design. Also it uses 7 segment displays, in case you didn't realize from the name.
 
 # Technologies used
 
-It runs on an ESP32 C3. It uses 7 segment displays. There will be a custom PCB, you can order from you favourite PCB manufacturer (I usually go with JLCPCB). The 7 Segment displays, as well as the choosing of the correct dice is done via shift registers (one with serial in - parallel out and the other one with parallel in - serial out).
+- Uses 74HC595 and 74HC165 **shift registers** to minimize GPIO usage (only 6 pins to control 24+ I/O points)
+- Custom PCB designed in KiCad and manufactured with JLCPCB
+- **Bitwise logic** using a dipswitch and the shift register
+
+# Custom PCB
+
+The PCB was designed with KiCad. Only a few components are needed:<br>
+<img src="images/7-segment-dice.jpeg" alt="PCB Design KiCad" width="400">
+
+## Bill of Materials (BOM)
+
+| Component | Quantity | Package / Size | Description |
+| :--- | :---: | :--- | :--- |
+| **ESP32-S3 SuperMini** | 1 | Module | Main MCU with 4MB Flash (no PSRAM) |
+| **74HC595** | 2 | SOP-16 | 8-bit Output Shift Register (Display Drive) |
+| **74HC165** | 1 | SOP-16 | 8-bit Input Shift Register (DIP Switch) |
+| **7-Segment Display** | 2 | SMD | Common Cathode, Single Digit, 0.56 inch |
+| **DIP Switch** | 1 | SMD DIP-16 | 8-Position Slide Switch |
+| **Mechanical Key Switch** | 1 | Through-hole Cherry Style | "Dice Throw" Trigger Button |
+| **Resistor** | 16 | 0805 | 220Ω (LED Current Limiting) |
+| **Resistor** | 8 | 0805 | 10kΩ (DIP Switch Pull-ups) |
+| **Capacitor** | 3 | 0805 | 100nF (Decoupling) |
